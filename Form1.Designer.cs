@@ -34,6 +34,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(18F, 45F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = global::_2048Game.Properties.Resources.numbers;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(2400, 1475);
             this.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);

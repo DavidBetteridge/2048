@@ -23,7 +23,7 @@ namespace _2048Game
                     _board[column, row] = 0;
                 }
             }
-
+            Score = 0;
             AddCounter();
         }
 
@@ -47,6 +47,8 @@ namespace _2048Game
 
         public byte Cell(int column, int row) => _board[column, row];
 
+        public int Score { get; private set; }
+
         public void MoveLeft()
         {
             var merged = new bool[4, 4];
@@ -58,19 +60,7 @@ namespace _2048Game
                 {
                     for (int row = 0; row < 4; row++)
                     {
-                        if (_board[column - 1, row] == 0)
-                        {
-                            _board[column - 1, row] = _board[column, row];
-                            _board[column, row] = 0;
-                            workDone = true;
-                        }
-                        else if (_board[column - 1, row] == _board[column, row] && !merged[column - 1, row] && !merged[column, row])
-                        {
-                            _board[column - 1, row] = (byte)(_board[column - 1, row] + 1);
-                            _board[column, row] = 0;
-                            merged[column - 1, row] = true;
-                            workDone = true;
-                        }
+                        workDone |= TryToSlide(column, row, column - 1, row, merged);
                     }
                 }
 
@@ -92,19 +82,7 @@ namespace _2048Game
                 {
                     for (int row = 0; row < 4; row++)
                     {
-                        if (_board[column + 1, row] == 0)
-                        {
-                            _board[column + 1, row] = _board[column, row];
-                            _board[column, row] = 0;
-                            workDone = true;
-                        }
-                        else if (_board[column + 1, row] == _board[column, row] && !merged[column + 1, row] && !merged[column, row])
-                        {
-                            _board[column + 1, row] = (byte)(_board[column + 1, row] + 1);
-                            _board[column, row] = 0;
-                            merged[column + 1, row] = true;
-                            workDone = true;
-                        }
+                        workDone |= TryToSlide(column, row, column + 1, row, merged);
                     }
                 }
 
@@ -126,19 +104,7 @@ namespace _2048Game
                 {
                     for (int column = 0; column < 4; column++)
                     {
-                        if (_board[column, row - 1] == 0)
-                        {
-                            _board[column, row - 1] = _board[column, row];
-                            _board[column, row] = 0;
-                            workDone = true;
-                        }
-                        else if (_board[column, row - 1] == _board[column, row] && !merged[column, row - 1] && !merged[column, row])
-                        {
-                            _board[column, row - 1] = (byte)(_board[column, row - 1] + 1);
-                            _board[column, row] = 0;
-                            merged[column, row - 1] = true;
-                            workDone = true;
-                        }
+                        workDone |= TryToSlide(column, row, column, row - 1, merged);
                     }
                 }
 
@@ -160,19 +126,7 @@ namespace _2048Game
                 {
                     for (int column = 0; column < 4; column++)
                     {
-                        if (_board[column, row + 1] == 0)
-                        {
-                            _board[column, row + 1] = _board[column, row];
-                            _board[column, row] = 0;
-                            workDone = true;
-                        }
-                        else if (_board[column, row + 1] == _board[column, row] && !merged[column, row + 1] && !merged[column, row])
-                        {
-                            _board[column, row + 1] = (byte)(_board[column, row + 1] + 1);
-                            _board[column, row] = 0;
-                            merged[column, row + 1] = true;
-                            workDone = true;
-                        }
+                        workDone |= TryToSlide(column, row, column, row + 1, merged);
                     }
                 }
 
@@ -181,6 +135,25 @@ namespace _2048Game
                 _drawBoard();
             }
             AddCounter();
+        }
+
+        private bool TryToSlide(int fromColumn, int fromRow, int toColumn, int toRow, bool[,] merged)
+        {
+            if (_board[toColumn, toRow] == 0)
+            {
+                _board[toColumn, toRow] = _board[fromColumn, fromRow];
+                _board[fromColumn, fromRow] = 0;
+                return true;
+            }
+            else if (_board[toColumn, toRow] == _board[fromColumn, fromRow] && !merged[toColumn, toRow] && !merged[fromColumn, fromRow])
+            {
+                _board[toColumn, toRow] = (byte)(_board[toColumn, toRow] + 1);
+                _board[fromColumn, fromRow] = 0;
+                merged[toColumn, toRow] = true;
+                Score += (int)Math.Pow(2, _board[toColumn, toRow]);
+                return true;
+            }
+            return false;
         }
     }
 }
