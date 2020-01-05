@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace _2048Game
 {
@@ -26,7 +25,6 @@ namespace _2048Game
             }
 
             AddCounter();
-            _drawBoard();
         }
 
         private void AddCounter()
@@ -43,12 +41,16 @@ namespace _2048Game
             } while (_board[column, row] != 0);
 
             _board[column, row] = value;
+
+            _drawBoard();
         }
 
         public byte Cell(int column, int row) => _board[column, row];
 
         public void MoveLeft()
         {
+            var merged = new bool[4, 4];
+
             for (int iteration = 0; iteration < 3; iteration++)
             {
                 var workDone = false;
@@ -62,10 +64,11 @@ namespace _2048Game
                             _board[column, row] = 0;
                             workDone = true;
                         }
-                        else if (_board[column - 1, row] == _board[column, row])
+                        else if (_board[column - 1, row] == _board[column, row] && !merged[column - 1, row] && !merged[column, row])
                         {
                             _board[column - 1, row] = (byte)(_board[column - 1, row] + 1);
                             _board[column, row] = 0;
+                            merged[column - 1, row] = true;
                             workDone = true;
                         }
                     }
@@ -80,6 +83,8 @@ namespace _2048Game
 
         public void MoveRight()
         {
+            var merged = new bool[4, 4];
+
             for (int iteration = 0; iteration < 3; iteration++)
             {
                 var workDone = false;
@@ -93,10 +98,11 @@ namespace _2048Game
                             _board[column, row] = 0;
                             workDone = true;
                         }
-                        else if (_board[column + 1, row] == _board[column, row])
+                        else if (_board[column + 1, row] == _board[column, row] && !merged[column + 1, row] && !merged[column, row])
                         {
                             _board[column + 1, row] = (byte)(_board[column + 1, row] + 1);
                             _board[column, row] = 0;
+                            merged[column + 1, row] = true;
                             workDone = true;
                         }
                     }
@@ -111,6 +117,8 @@ namespace _2048Game
 
         public void MoveUp()
         {
+            var merged = new bool[4, 4];
+
             for (int iteration = 0; iteration < 3; iteration++)
             {
                 var workDone = false;
@@ -124,10 +132,11 @@ namespace _2048Game
                             _board[column, row] = 0;
                             workDone = true;
                         }
-                        else if (_board[column, row - 1] == _board[column, row])
+                        else if (_board[column, row - 1] == _board[column, row] && !merged[column, row - 1] && !merged[column, row])
                         {
                             _board[column, row - 1] = (byte)(_board[column, row - 1] + 1);
                             _board[column, row] = 0;
+                            merged[column, row - 1] = true;
                             workDone = true;
                         }
                     }
@@ -142,6 +151,8 @@ namespace _2048Game
 
         public void MoveDown()
         {
+            var merged = new bool[4, 4];
+
             for (int iteration = 0; iteration < 3; iteration++)
             {
                 var workDone = false;
@@ -155,10 +166,11 @@ namespace _2048Game
                             _board[column, row] = 0;
                             workDone = true;
                         }
-                        else if (_board[column, row + 1] == _board[column, row])
+                        else if (_board[column, row + 1] == _board[column, row] && !merged[column, row + 1] && !merged[column, row])
                         {
                             _board[column, row + 1] = (byte)(_board[column, row + 1] + 1);
                             _board[column, row] = 0;
+                            merged[column, row + 1] = true;
                             workDone = true;
                         }
                     }
